@@ -86,10 +86,7 @@ namespace CarDealerAPI.Services
         public int CreateDealer(DealerCreateDTO createDto)
         {
             var dealer = _mapper.Map<Dealer>(createDto);
-
-
             ///////////////////////////////something wrong  not assign 
-
             dealer.CreatedById = _userContextService.GetUserId;
             _dealerDbContext.Add(dealer);
             _dealerDbContext.SaveChanges();
@@ -107,8 +104,6 @@ namespace CarDealerAPI.Services
                 .Dealers
                 .FirstOrDefault(r => r.Id == id);
 
-            
-
             if (dealer == null) throw new NotFoundException("dealer not found");
 
             var authResult = _authorizationService.AuthorizeAsync(_userContextService.User, dealer, new ResouceOperationRequirement(ResouceOperation.Delete)).Result;
@@ -120,8 +115,6 @@ namespace CarDealerAPI.Services
             
             _dealerDbContext.Dealers.Remove(dealer);
             _dealerDbContext.SaveChanges();
-
-
 
             _logger.LogInformation($"Deleted successfully");
         }
