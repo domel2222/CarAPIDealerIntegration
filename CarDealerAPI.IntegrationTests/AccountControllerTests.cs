@@ -10,8 +10,10 @@ using System.Text;
 using System.Threading.Tasks;
 using Xunit;
 using FluentAssertions;
+using Moq;
 using CarDealerAPI.DTOS;
 using CarDealerAPI.IntegrationTests.Helpers;
+using CarDealerAPI.Services;
 
 namespace CarDealerAPI.IntegrationTests
 {
@@ -19,6 +21,7 @@ namespace CarDealerAPI.IntegrationTests
     {
         private HttpClient _httpClient;
         private string _apiAccountUrl = "api/account/";
+        private Mock<IAccountService> _accountServiceMock = new Mock<IAccountService>();
 
         public AccountControllerTests(WebApplicationFactory<Startup> webApplicationFactory)
         {
@@ -31,6 +34,8 @@ namespace CarDealerAPI.IntegrationTests
                                         .SingleOrDefault(services => services.ServiceType == typeof(DbContextOptions<DealerDbContext>));
 
                                 services.Remove(dbContextOption);
+
+                                services.AddSingleton<IAccountService>(_accountServiceMock.Object);
 
                                 services.AddDbContext<DealerDbContext>(options => options.UseInMemoryDatabase("DealerDb"));
                             });
@@ -74,6 +79,10 @@ namespace CarDealerAPI.IntegrationTests
         [Fact]
         public async Task Login_ForCreatedUserAccount_ReturnsOk()
         {
+            _accountServiceMock
+                .Setup(x => x.GenerateToken(It.IsAny<UserLoginDTO>()))
+                .Returns("JWT");
+
             var userLoginAccount = new UserLoginDTO()
             {
                 Email = "userTest2@gmail.com",
