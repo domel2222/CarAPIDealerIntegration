@@ -38,9 +38,7 @@ namespace CarDealerAPI.IntegrationTests
         {
             var scopeFactory = _webApplicationFactory.Services.GetService<IServiceScopeFactory>();
             var scope = scopeFactory.CreateScope();
-
-            var controller = scope.ServiceProvider.GetService<AccountController>();
-
+            //var controller = scope.ServiceProvider.GetService<AccountController>();
             _controllerTypes.ForEach(c =>
             {
                 var controller = scope.ServiceProvider.GetService(c);

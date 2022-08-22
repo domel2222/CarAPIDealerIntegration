@@ -58,7 +58,7 @@ namespace CarDealerAPI.Contexts
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            //dosen't work with integration test and InMemory / How to deal with??
+            //doesn't work with integration test and InMemory / How to deal with??
             //optionsBuilder.UseSqlServer(_config.GetConnectionString("DealersCar"), builder =>
             //{
             //    builder.EnableRetryOnFailure(5, TimeSpan.FromSeconds(10), null);
