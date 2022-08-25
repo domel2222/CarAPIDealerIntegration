@@ -83,7 +83,8 @@ namespace CarDealerAPI
             services.AddScoped<IAuthorizationHandler, CheckAgeHandler>();
             services.AddScoped<IAuthorizationHandler, ResouceOperationRequirementHandler>();
             services.AddScoped<IAuthorizationHandler, MultiDealerRequimentHandler>();
-            services.AddAutoMapper(typeof(DealerProfile).GetTypeInfo().Assembly);
+            //services.AddAutoMapper(typeof(DealerProfile).GetTypeInfo().Assembly);
+            services.AddAutoMapper(Assembly.GetExecutingAssembly());
             services.AddScoped<IDealerService, DealerService>();
             services.AddScoped<ICarService, CarService>();
             services.AddScoped<IAccountService, AccountService>();

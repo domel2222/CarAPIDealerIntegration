@@ -56,6 +56,61 @@ namespace CarDealerAPI.IntegrationTests.Validators
             result.ShouldNotHaveAnyValidationErrors();
         }
 
+        [Fact]
+        public void Validate_ForInvalidModel_ReturnsFaild()
+        {
+            var model = new UserCreateDTO()
+            {
+                Email = "testFirst@gmail.com",
+                Password = "mytest321",
+                ConfirmPassword = "mytest321"
+            };
+
+            var validator = new RegisterDtoValidator(_dbContext);
+
+            var result = validator.TestValidate(model);
+
+            result.ShouldHaveAnyValidationError();
+        }
+
+        [Theory]
+        [MemberData(nameof(GetSampleInvalidData))]
+        public void Validate_ForMultipleInvalidModel_ReturnsFaild(UserCreateDTO model)
+        {
+            var validator = new RegisterDtoValidator(_dbContext);
+
+            var result = validator.TestValidate(model);
+
+            result.ShouldHaveAnyValidationError();
+        }
+
+        public static IEnumerable<object[]> GetSampleInvalidData()
+        {
+            var list = new List<UserCreateDTO>()
+            {
+                new UserCreateDTO()
+                {
+                    Email = "testSecond@gmail.com",
+                    Password = "mytest321",
+                    ConfirmPassword = "mytest321"
+                },
+                new UserCreateDTO()
+                {
+                    Email = "",
+                    Password = "ggggg451",
+                    ConfirmPassword = "ggggg451"
+                },
+                new UserCreateDTO()
+                {
+                    Email = "mamyTest@gmail.com",
+                    Password = "xx12",
+                    ConfirmPassword = "xx12"
+                }
+            };
+
+            return list.Select(x => new object[] { x });
+        }
+
         public static IEnumerable<object[]> GetSampleValidData()
         {
             var list = new List<UserCreateDTO>()
@@ -80,7 +135,7 @@ namespace CarDealerAPI.IntegrationTests.Validators
                 },
             };
 
-            return list.Select(x => new object[] { x } ); 
+            return list.Select(x => new object[] { x });
         }
 
         private void Seed()
