@@ -17,16 +17,18 @@ using CarDealerAPI.Services;
 
 namespace CarDealerAPI.IntegrationTests
 {
-    public class AccountControllerTests : IClassFixture<WebApplicationFactory<Startup>>
+    public class AccountControllerTests : IClassFixture<WebApplicationFactory<Program>>
     {
         private HttpClient _httpClient;
         private string _apiAccountUrl = "api/account/";
         private Mock<IAccountService> _accountServiceMock = new Mock<IAccountService>();
 
-        public AccountControllerTests(WebApplicationFactory<Startup> webApplicationFactory)
+        public AccountControllerTests(WebApplicationFactory<Program> webApplicationFactory)
+        //public AccountControllerTests()
         {
-            _httpClient = webApplicationFactory.
-                        WithWebHostBuilder(builder =>
+            //_httpClient = new WebApplicationFactory<Program>() - with internals visible To
+            _httpClient = webApplicationFactory
+                        .WithWebHostBuilder(builder =>
                         {
                             builder.ConfigureServices(services =>
                             {

@@ -17,6 +17,9 @@ using NLog.Web;
 using System.Reflection;
 using System.Text;
 using FluentValidation.AspNetCore;
+using System.Runtime.CompilerServices;
+
+//[assembly: InternalsVisibleTo("CarDealerAPI.IntegrationTests")]
 
 var builder = WebApplication.CreateBuilder();
 
@@ -137,4 +140,6 @@ app.UseEndpoints(endpoints =>
 });
 
 app.Run();
+
+public partial class Program { }
 

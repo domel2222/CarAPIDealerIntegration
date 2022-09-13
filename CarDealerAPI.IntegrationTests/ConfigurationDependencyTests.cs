@@ -12,14 +12,14 @@ using Xunit;
 
 namespace CarDealerAPI.IntegrationTests
 {
-    public class ConfigurationDependencyTests : IClassFixture<WebApplicationFactory<Startup>>
+    public class ConfigurationDependencyTests : IClassFixture<WebApplicationFactory<Program>>
     {
         private readonly List<Type> _controllerTypes;
-        private readonly WebApplicationFactory<Startup> _webApplicationFactory;
+        private readonly WebApplicationFactory<Program> _webApplicationFactory;
 
-        public ConfigurationDependencyTests(WebApplicationFactory<Startup> webApplicationFactory)
+        public ConfigurationDependencyTests(WebApplicationFactory<Program> webApplicationFactory)
         {
-             _controllerTypes = typeof(Startup)
+             _controllerTypes = typeof(Program)
                 .Assembly
                 .GetTypes()
                 .Where(c => c.IsSubclassOf(typeof(ControllerBase)))
