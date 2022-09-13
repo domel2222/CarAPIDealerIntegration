@@ -25,7 +25,6 @@ namespace CarDealerAPI.Controllers
         [HttpPost("register")]
         public ActionResult RegisterUser ([FromBody] UserCreateDTO userDto)
         {
-            
             _accountService.RegisterUser(userDto);
 
             return Ok();

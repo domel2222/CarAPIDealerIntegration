@@ -27,7 +27,6 @@ namespace CarDealerAPI.Middlewere
             }
             catch (BadRequestException badRequest)
             {
-
                 context.Response.StatusCode = 400;
                  await context.Response.WriteAsync(badRequest.Message);
             }
@@ -38,7 +37,6 @@ namespace CarDealerAPI.Middlewere
             }
             catch (NotFoundException notFoundException)
             {
-
                 context.Response.StatusCode = 404;
                  await context.Response.WriteAsync(notFoundException.Message);
             }

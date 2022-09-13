@@ -14,17 +14,19 @@ using CarDealerAPI.DTOS;
 using Newtonsoft.Json;
 using Microsoft.AspNetCore.Authorization.Policy;
 using CarDealerAPI.IntegrationTests.Helpers;
+using CarDealerAPI.Models;
 
 namespace CarDealerAPI.IntegrationTests
 {
     public class DealerControllerTests : IClassFixture<WebApplicationFactory<Startup>>
     {
         private HttpClient _httpClient;
+        private WebApplicationFactory<Startup> _factory;
         private string _apiDealerUrl = "api/Dealer/";
 
         public DealerControllerTests(WebApplicationFactory<Startup> factory)
         {
-            _httpClient = factory.
+            _factory = factory.
                         WithWebHostBuilder(builder =>
                         {
                             builder.ConfigureServices(services =>
@@ -39,8 +41,9 @@ namespace CarDealerAPI.IntegrationTests
 
                                 services.AddDbContext<DealerDbContext>(options => options.UseInMemoryDatabase("DealerDb"));
                             });
-                        })
-                        .CreateClient();
+                        });
+                        
+            _httpClient = _factory.CreateClient();
         }
 
         [Fact]
@@ -60,6 +63,46 @@ namespace CarDealerAPI.IntegrationTests
             response.StatusCode.Should().Be(System.Net.HttpStatusCode.Created);
             response.Headers.Location.Should().NotBeNull();
 
+        }
+
+        [Fact]
+        public async Task Delete_ForUserDealerOwner_ReturnsNoContent()
+        {
+            var dealer = new Dealer()
+            {
+                CreatedById = 1,
+                DealerName = "TestDealer"
+            };
+
+            SeedDealerToDb( dealer);
+
+            var response = await _httpClient.DeleteAsync(_apiDealerUrl + dealer.Id);
+
+            response.StatusCode.Should().Be(System.Net.HttpStatusCode.NoContent);
+        }
+
+        [Fact]
+        public async Task Delete_UserDealerNonOwner_ReturnsForbidden()
+        {
+            var dealer = new Dealer()
+            {
+                CreatedById = 126,
+                DealerName = "TestDealer"
+            };
+
+            SeedDealerToDb(dealer);
+
+            var response = await _httpClient.DeleteAsync(_apiDealerUrl + dealer.Id);
+
+            response.StatusCode.Should().Be(System.Net.HttpStatusCode.Forbidden);
+        }
+
+        [Fact]
+        public async Task Delete_ForNonExistingDealer_ReturnsNotFound()
+        {
+            var response = await _httpClient.DeleteAsync(_apiDealerUrl + "2287");
+
+            response.StatusCode.Should().Be(System.Net.HttpStatusCode.NotFound);
         }
 
         [Fact]
@@ -111,6 +154,16 @@ namespace CarDealerAPI.IntegrationTests
             var response = await _httpClient.GetAsync(url);
 
             response.StatusCode.Should().Be(System.Net.HttpStatusCode.BadRequest);
+        }
+        private void SeedDealerToDb(Dealer dealer)
+        {
+            var scopeFactory = _factory.Services.GetService<IServiceScopeFactory>();
+            var scope = scopeFactory.CreateScope();
+
+            var _dbContext = scope.ServiceProvider.GetService<DealerDbContext>();
+
+            _dbContext.Dealers.Add(dealer);
+            _dbContext.SaveChanges();
         }
     }
 }
