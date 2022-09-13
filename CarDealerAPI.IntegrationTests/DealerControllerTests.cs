@@ -18,13 +18,13 @@ using CarDealerAPI.Models;
 
 namespace CarDealerAPI.IntegrationTests
 {
-    public class DealerControllerTests : IClassFixture<WebApplicationFactory<Startup>>
+    public class DealerControllerTests : IClassFixture<WebApplicationFactory<Program>>
     {
         private HttpClient _httpClient;
-        private WebApplicationFactory<Startup> _factory;
+        private WebApplicationFactory<Program> _factory;
         private string _apiDealerUrl = "api/Dealer/";
 
-        public DealerControllerTests(WebApplicationFactory<Startup> factory)
+        public DealerControllerTests(WebApplicationFactory<Program> factory)
         {
             _factory = factory.
                         WithWebHostBuilder(builder =>

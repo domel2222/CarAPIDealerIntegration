@@ -27,6 +27,8 @@
 			<CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
 		</Content>
 	</ItemGroup>
-	
+	<!--<ItemGroup>
+		<InternalsVisibleTo Include="CarDealerAPI.IntegrationTests"/>
+	</ItemGroup>-->
 
 </Project>
