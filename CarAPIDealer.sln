@@ -1,10 +1,8 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.31624.102
+# Visual Studio Version 17
+VisualStudioVersion = 17.4.32804.182
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CarAPIDealer", "CarAPIDealer\CarAPIDealer.csproj", "{A64F332B-0358-4E8E-8858-190077DF03DF}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{5501E1EA-A1CB-461F-BAF6-9B9620787955}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{5610A718-17FD-42CD-9E7F-E7E33E03BAE8}"
@@ -19,10 +17,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{A64F332B-0358-4E8E-8858-190077DF03DF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A64F332B-0358-4E8E-8858-190077DF03DF}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{A64F332B-0358-4E8E-8858-190077DF03DF}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A64F332B-0358-4E8E-8858-190077DF03DF}.Release|Any CPU.Build.0 = Release|Any CPU
 		{5734886F-0052-43E3-A3DF-3E330C53CA7B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{5734886F-0052-43E3-A3DF-3E330C53CA7B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5734886F-0052-43E3-A3DF-3E330C53CA7B}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -36,7 +30,6 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{A64F332B-0358-4E8E-8858-190077DF03DF} = {5501E1EA-A1CB-461F-BAF6-9B9620787955}
 		{5734886F-0052-43E3-A3DF-3E330C53CA7B} = {5501E1EA-A1CB-461F-BAF6-9B9620787955}
 		{A0627B50-10B9-41E1-A399-3B3A83669439} = {5610A718-17FD-42CD-9E7F-E7E33E03BAE8}
 	EndGlobalSection

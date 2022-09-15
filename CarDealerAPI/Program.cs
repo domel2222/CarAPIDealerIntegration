@@ -18,15 +18,19 @@ using System.Reflection;
 using System.Text;
 using FluentValidation.AspNetCore;
 using System.Runtime.CompilerServices;
+using Microsoft.EntityFrameworkCore;
 
 //[assembly: InternalsVisibleTo("CarDealerAPI.IntegrationTests")]
 
-var builder = WebApplication.CreateBuilder();
+var builder = WebApplication.CreateBuilder(args);
 
 //NLog config 
 builder.Logging.ClearProviders();
 builder.Logging.SetMinimumLevel(LogLevel.Trace);
 builder.Host.UseNLog();
+
+
+
 
 //config builder.Services
 var authSettings = new AuthenticationSettings();
@@ -61,7 +65,7 @@ builder.Services.AddAuthorization(policy =>
 });
 
 builder.Services.AddControllers().AddFluentValidation();
-builder.Services.AddDbContext<DealerDbContext>();
+//builder.Services.AddDbContext<DealerDbContext>();
 builder.Services.AddScoped<DealerSeeder>();
 builder.Services.AddScoped<IAuthorizationHandler, CheckAgeHandler>();
 builder.Services.AddScoped<IAuthorizationHandler, ResouceOperationRequirementHandler>();
@@ -91,6 +95,12 @@ builder.Services.AddCors(option =>
             .WithOrigins(builder.Configuration["AllowClient"]));
 });
 
+builder.Services.AddDbContext<DealerDbContext>(
+    option =>
+        option.UseSqlServer(builder.Configuration.GetConnectionString("DealersCar"))
+    );
+
+
 var app = builder.Build();
 //configure
 
@@ -107,17 +117,7 @@ if (app.Environment.IsDevelopment())
 {
     app.UseDeveloperExceptionPage();
 }
-//app.Use(async (context, next) =>
-//{
-//    // Do work that doesn't write to the Response.
-//    await next.Invoke();
-//    // Do logging or other work that doesn't write to the Response.
-//});
 
-//app.Run(async context =>
-//{
-//    await context.Response.WriteAsync("Hello from 2nd delegate.");
-//});
 app.UseMiddleware<ErrorHandlingMiddleware>();
 app.UseMiddleware<RequestTimeMiddle>();
 app.UseHttpsRedirection();
@@ -140,6 +140,5 @@ app.UseEndpoints(endpoints =>
 });
 
 app.Run();
-
 public partial class Program { }
 

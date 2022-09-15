@@ -17,14 +17,14 @@ namespace CarDealerAPI.IntegrationTests.Validators
 {
     public class RegisterDtoValidatorTests
     {
-        private DealerDbContext _dbContext;
+        private readonly DealerDbContext _dbContext;
         public RegisterDtoValidatorTests()
         {
-            var config = new ConfigurationBuilder()
-                .Build();
+            //var config = new ConfigurationBuilder()
+            //    .Build();
             var builder = new DbContextOptionsBuilder<DealerDbContext>();
             builder.UseInMemoryDatabase("TestDbDealer");
-            _dbContext = new DealerDbContext(builder.Options, config);
+            _dbContext = new DealerDbContext(builder.Options);
             Seed();
         }
 

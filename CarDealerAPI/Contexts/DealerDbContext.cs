@@ -11,13 +11,16 @@ namespace CarDealerAPI.Contexts
 {
     public class DealerDbContext : DbContext
     {
-        private readonly IConfiguration _config;
+        //private readonly IConfiguration _config;
 
-        public DealerDbContext(DbContextOptions option, IConfiguration config) : base(option)
-        {
-            this._config = config;
-        }
-        
+        //public DealerDbContext(DbContextOptions<DealerDbContext> option, IConfiguration config) : base(option)
+        //{
+        //    this._config = config;
+        //}
+
+        public DealerDbContext(DbContextOptions<DealerDbContext> option) : base(option) { }
+
+
         public DbSet<Dealer> Dealers { get; set; }
         public DbSet<Car> Cars { get; set; }
         public DbSet<Address> Adresses {get;set;}
@@ -59,10 +62,10 @@ namespace CarDealerAPI.Contexts
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             //doesn't work with integration test and InMemory / How to deal with??
-            optionsBuilder.UseSqlServer(_config.GetConnectionString("DealersCar"), builder =>
-            {
-                builder.EnableRetryOnFailure(5, TimeSpan.FromSeconds(10), null);
-            });
+            //optionsBuilder.UseSqlServer(_config.GetConnectionString("DealersCar"), builder =>
+            //{
+            //    builder.EnableRetryOnFailure(5, TimeSpan.FromSeconds(10), null);
+            //});
             //optionsBuilder.UseSqlServer(_config.GetConnectionString("DealersCar"));
         }
     }
