@@ -19,12 +19,10 @@ namespace CarDealerAPI.Controllers
     public class CarController : ControllerBase
     {
         private readonly ICarService _carService;
-        private readonly DealerDbContext _dealerDbContext;
 
-        public CarController(ICarService carService, DealerDbContext dealerDbContext)
+        public CarController(ICarService carService)
         {
             this._carService = carService;
-            this._dealerDbContext = dealerDbContext;
         }
 
         [HttpPost]
@@ -36,6 +34,7 @@ namespace CarDealerAPI.Controllers
         }
 
         [HttpGet("{carId}")]
+        //[Authorize(Policy = "ColorEyes")]
         public ActionResult<CarReadDTO> GetCarInDealer(int dealerId, int carId)
         {
             CarReadDTO car = _carService.GetCarById(dealerId, carId);
