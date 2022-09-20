@@ -4,11 +4,6 @@ using CarDealerAPI.DTOS;
 using CarDealerAPI.Exceptions;
 using CarDealerAPI.Models;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CarDealerAPI.Services
 {
@@ -25,7 +20,6 @@ namespace CarDealerAPI.Services
 
         public int CreateNewCar(int dealerId, CarCreateDTO newCar)
         {
-
             GetDealerById(dealerId);
 
             var carE = _mapper.Map<Car>(newCar);

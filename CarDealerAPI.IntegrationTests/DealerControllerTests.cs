@@ -1,20 +1,16 @@
-﻿using Microsoft.AspNetCore.Mvc.Testing;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Xunit;
-using FluentAssertions;
-using System.Net.Http;
-using CarDealerAPI.Contexts;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
+﻿using CarDealerAPI.Contexts;
 using CarDealerAPI.DTOS;
-using Newtonsoft.Json;
-using Microsoft.AspNetCore.Authorization.Policy;
 using CarDealerAPI.IntegrationTests.Helpers;
 using CarDealerAPI.Models;
+using FluentAssertions;
+using Microsoft.AspNetCore.Authorization.Policy;
+using Microsoft.AspNetCore.Mvc.Testing;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+using System.Linq;
+using System.Net.Http;
+using System.Threading.Tasks;
+using Xunit;
 
 namespace CarDealerAPI.IntegrationTests
 {
@@ -42,7 +38,7 @@ namespace CarDealerAPI.IntegrationTests
                                 services.AddDbContext<DealerDbContext>(options => options.UseInMemoryDatabase("DealerDb"));
                             });
                         });
-                        
+
             _httpClient = _factory.CreateClient();
         }
 
@@ -62,7 +58,6 @@ namespace CarDealerAPI.IntegrationTests
             //assert
             response.StatusCode.Should().Be(System.Net.HttpStatusCode.Created);
             response.Headers.Location.Should().NotBeNull();
-
         }
 
         [Fact]
@@ -74,7 +69,7 @@ namespace CarDealerAPI.IntegrationTests
                 DealerName = "TestDealer"
             };
 
-            SeedDealerToDb( dealer);
+            SeedDealerToDb(dealer);
 
             var response = await _httpClient.DeleteAsync(_apiDealerUrl + dealer.Id);
 
@@ -127,7 +122,6 @@ namespace CarDealerAPI.IntegrationTests
             var factory = new WebApplicationFactory<Program>();
             var clinet = factory.CreateClient();
 
-
             var url = "/api/Dealer?PageSize=5&PageNumber=2";
             //var response = await _httpClient.GetAsync(url);
             var response = await clinet.GetAsync(url);
@@ -160,6 +154,7 @@ namespace CarDealerAPI.IntegrationTests
 
             response.StatusCode.Should().Be(System.Net.HttpStatusCode.BadRequest);
         }
+
         private void SeedDealerToDb(Dealer dealer)
         {
             var scopeFactory = _factory.Services.GetService<IServiceScopeFactory>();
