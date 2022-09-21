@@ -3,13 +3,8 @@ using CarDealerAPI.DTOS;
 using CarDealerAPI.Extensions.Validators;
 using CarDealerAPI.Models;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Xunit;
 using FluentValidation.TestHelper;
 

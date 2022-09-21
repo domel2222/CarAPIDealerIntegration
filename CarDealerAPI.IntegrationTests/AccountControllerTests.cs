@@ -44,6 +44,7 @@ namespace CarDealerAPI.IntegrationTests
 
                                 services.AddDbContext<DealerDbContext>(options => options.UseInMemoryDatabase("DealerDb"));
                             });
+                        
                         })
                         .CreateClient();
         }

@@ -8,29 +8,23 @@ using Xunit;
 
 namespace CarDealerAPI.IntegrationTests
 {
-    public class CarControllerTests : IClassFixture<WebApplicationFactory<Program>>
+    public class CarControllerTestsRealDb : IClassFixture<WebApplicationFactory<Program>>
     {
         private string _uriStart = "api/dealer/";
-        private string _uriEnd = "/car";
+        private string _uriEnd = "/car/";
         private WebApplicationFactory<Program> _factory;
         private HttpClient _httpClient;
 
-        public CarControllerTests(WebApplicationFactory<Program> webApplicationFactory)
+        public CarControllerTestsRealDb(WebApplicationFactory<Program> webApplicationFactory)
         {
             _factory = webApplicationFactory
                     .WithWebHostBuilder(builder =>
                     {
                         builder.ConfigureServices(services =>
                         {
-                            //var dbContextOption = services.SingleOrDefault(ser => ser.ServiceType == typeof(DbContextOptions<DealerDbContext>));
-
-                            //services.Remove(dbContextOption);
-
                             services.AddSingleton<IPolicyEvaluator, FakePolicyevaluator>();
 
                             services.AddMvc(option => option.Filters.Add(new FakeUserFilter()));
-
-                            //services.AddDbContext<DealerDbContext>(option => option.UseInMemoryDatabase("DealerDb"));
                         });
                     });
             _httpClient = _factory.CreateClient();
@@ -69,13 +63,39 @@ namespace CarDealerAPI.IntegrationTests
         [InlineData(2, 3)]
         [InlineData(8, 12)]
         [InlineData(1, 2)]
-        public async Task GetCar_FromDealerByCarId_ReturnsOk(int dealerId, int carId)
+        public async Task GetCar_FromDealerByCarId_CarIdExist_ReturnsOk(int dealerId, int carId)
+        {
+            var uri = $"{_uriStart}{dealerId}{_uriEnd}{carId}";
+
+            var response = await _httpClient.GetAsync(uri);
+
+            response.StatusCode.Should().Be(System.Net.HttpStatusCode.OK);
+        }
+
+        [Theory]
+        [InlineData(2, 112)]
+        [InlineData(8, 6)]
+        [InlineData(1, 16)]
+        public async Task GetCar_FromDealerByCarId_NotExistCarId_ReturnsNotFound(int dealerId, int carId)
         {
             var uri = $"{_uriStart}{dealerId}{_uriEnd}/{carId}";
 
             var response = await _httpClient.GetAsync(uri);
 
-            response.StatusCode.Should().Be(System.Net.HttpStatusCode.OK);
+            response.StatusCode.Should().Be(System.Net.HttpStatusCode.NotFound);
+        }
+
+        [Theory]
+        [InlineData(11, 3)]
+        [InlineData(18, 12)]
+        [InlineData(50, 2)]
+        public async Task GetCar_FromDealerByCarIdWithInvalidDealer_ReturnsOk(int dealerId, int carId)
+        {
+            var uri = $"{_uriStart}{dealerId}{_uriEnd}/{carId}";
+
+            var response = await _httpClient.GetAsync(uri);
+
+            response.StatusCode.Should().Be(System.Net.HttpStatusCode.NotFound);
         }
     }
 }

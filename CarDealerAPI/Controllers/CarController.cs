@@ -8,6 +8,7 @@ namespace CarDealerAPI.Controllers
     [Route("api/dealer/{dealerId}/car")]
     [ApiController]
     [Produces("application/json")]
+    [Authorize]
     public class CarController : ControllerBase
     {
         private readonly ICarService _carService;
