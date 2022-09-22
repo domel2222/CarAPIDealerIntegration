@@ -60,6 +60,7 @@ namespace CarDealerAPI.Controllers
 
             return Ok(dealer);
         }
+
         [HttpPost]
         [Authorize(Roles = "Administrator,Dealer Manager")]
         //[Authorize(Roles = "Dealer Manager")] // calim role must have in JWT

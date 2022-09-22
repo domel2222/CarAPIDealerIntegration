@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Authorization.Policy;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -123,7 +124,7 @@ namespace CarDealerAPI.IntegrationTests
             var clinet = factory.CreateClient();
 
             var url = "/api/Dealer?PageSize=5&PageNumber=2";
-            //var response = await _httpClient.GetAsync(url);
+
             var response = await clinet.GetAsync(url);
 
             response.StatusCode.Should().Be(System.Net.HttpStatusCode.OK);
@@ -154,6 +155,52 @@ namespace CarDealerAPI.IntegrationTests
 
             response.StatusCode.Should().Be(System.Net.HttpStatusCode.BadRequest);
         }
+
+        [Fact]
+        public async Task GetOneDealer_ById_ReturnStatusOk()
+        {
+
+            var dealerModel = new Dealer()
+            {
+                CreatedById = 1,
+                DealerName = "PorsheDealer",
+                Category = "Sports",
+                Description = "Wrrrrrrrrrrrrrrummmmmmmmmmmm",
+                ContactEmail = "speedPorsche@porcshemiami.com",
+                TestDrive = true,
+
+                Cars = new List<Car>()
+                    {
+                        new Car()
+                            {
+                                NameMark = "Porsche",
+                                Model = "911",
+                                Price = 415.00M
+                            },
+
+                    },
+
+                Address = new Address()
+                {
+                    City = "Miami",
+                    Country = "Usa",
+                    Street = "St Florida",
+                }
+            };
+
+            SeedDealerToDb(dealerModel);
+
+            var response = await _httpClient.GetAsync(_apiDealerUrl + dealerModel.Id);
+
+            response.StatusCode.Should().Be(System.Net.HttpStatusCode.OK);
+
+        }
+        public async Task GetOneDealer_ById_ReturnNotFound()
+        {
+
+        }
+
+        //public async Task UpdateDealer_ById_ReturnStatusOK()
 
         private void SeedDealerToDb(Dealer dealer)
         {

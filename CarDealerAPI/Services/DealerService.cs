@@ -41,6 +41,7 @@ namespace CarDealerAPI.Services
 
         public DealerReadDTO GetDealerById(int id)
         {
+
             var dealer = _dealerDbContext
                 .Dealers
                 .Include(r => r.Address)

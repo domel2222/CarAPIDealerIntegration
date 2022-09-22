@@ -104,12 +104,12 @@ namespace CarDealerAPI.IntegrationTests
 
             carResponse.StatusCode.Should().Be(System.Net.HttpStatusCode.NotFound);
         }
-        [Fact]
-        public async Task DeleteAllCars_FromDealerById_ReturnNoContent()
-        {
-            SeedDealerToDb();
 
-            var dealerId = 1;
+        [Fact]
+        public async Task DeleteAllCars_FromDealerById_ForExistingDealer_ReturnNoContent()
+        {
+            var dealerId = SeedDealerToDb();
+
             var url = $"{_urlStart}{dealerId}{_urlEnd}";
 
             var response = await _httpClient.DeleteAsync(url);
@@ -117,6 +117,17 @@ namespace CarDealerAPI.IntegrationTests
             response.StatusCode.Should().Be(System.Net.HttpStatusCode.NoContent);
         }
 
+        [Fact]
+        public async Task DeleteAllCars_FromDealerById_ForNonExistingDealer_ReturnNotFound()
+        {
+
+            var dealerId = 20;
+            var url = $"{_urlStart}{dealerId}{_urlEnd}";
+
+            var response = await _httpClient.DeleteAsync(url);
+
+            response.StatusCode.Should().Be(System.Net.HttpStatusCode.NotFound);
+        }
         private int SeedDealerToDb(Dealer model = null)
         {
             var scopeFactory = _factory.Services.GetService<IServiceScopeFactory>();
