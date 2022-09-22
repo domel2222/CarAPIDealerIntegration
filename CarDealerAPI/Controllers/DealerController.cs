@@ -58,6 +58,7 @@ namespace CarDealerAPI.Controllers
         {
             var dealer = _dealerService.GetDealerById(id);
 
+
             return Ok(dealer);
         }
 

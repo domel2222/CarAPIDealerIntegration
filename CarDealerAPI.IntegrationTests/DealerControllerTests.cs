@@ -1,5 +1,6 @@
 ﻿using CarDealerAPI.Contexts;
 using CarDealerAPI.DTOS;
+using CarDealerAPI.Exceptions;
 using CarDealerAPI.IntegrationTests.Helpers;
 using CarDealerAPI.Models;
 using FluentAssertions;
@@ -195,12 +196,88 @@ namespace CarDealerAPI.IntegrationTests
             response.StatusCode.Should().Be(System.Net.HttpStatusCode.OK);
 
         }
+        [Fact]
         public async Task GetOneDealer_ById_ReturnNotFound()
         {
+            var dealerId = 150;
 
+            var response = await _httpClient.GetAsync(_apiDealerUrl + dealerId);
+
+            response.StatusCode.Should().Be(System.Net.HttpStatusCode.NotFound);
+        }
+        [Fact]
+        public async Task UpdateDealer_ById_UserOwner_ReturnsStatusOK()
+        {
+            var dealerModel = new Dealer()
+            {
+                CreatedById = 1,
+                DealerName = "StarDealer",
+                Category = "Truck",
+                Description = "Here we go!!!",
+                ContactEmail = "StarForever@Star.com",
+                TestDrive = true,
+            };
+
+            SeedDealerToDb(dealerModel);
+
+            var newDealerModel = new DealerUpdateDTO()
+            {
+                DealerName = "JelczCompany",
+                Description = "Mamy To",
+                TestDrive = false
+            };
+
+            var httpContent = newDealerModel.ToJsonHttpContent();
+            var response = await _httpClient.PutAsync(_apiDealerUrl + dealerModel.Id, httpContent);
+
+            response.StatusCode.Should().Be(System.Net.HttpStatusCode.OK);
         }
 
-        //public async Task UpdateDealer_ById_ReturnStatusOK()
+        [Fact]
+        public async Task UpdateDealer_ById_UserNotOwner_ReturnsForbidden()
+        {
+            var dealerModel = new Dealer()
+            {
+                CreatedById = 15,
+                DealerName = "KawasakiDealer",
+                Category = "Sport",
+                Description = "Do you wanna ride?",
+                ContactEmail = "speedride@gmail.com",
+                TestDrive = false,
+            };
+
+            SeedDealerToDb(dealerModel);
+
+            var newDealerModel = new DealerUpdateDTO()
+            {
+                DealerName = "PeugeotDealer",
+                Description = "Empty",
+                TestDrive = true
+            };
+
+            var httpContent = newDealerModel.ToJsonHttpContent();
+            var response = await _httpClient.PutAsync(_apiDealerUrl + dealerModel.Id, httpContent);
+
+            response.StatusCode.Should().Be(System.Net.HttpStatusCode.Forbidden);
+        }
+
+        [Fact]
+        public async Task UpdateDealer_ById_ReturnsNotFound()
+        {
+            var dealerId = 6659;
+
+            var newDealerModel = new DealerUpdateDTO()
+            {
+                DealerName = "PeugeotDealer",
+                Description = "Empty",
+                TestDrive = true
+            };
+
+            var httpContent = newDealerModel.ToJsonHttpContent();
+            var response = await _httpClient.PutAsync(_apiDealerUrl + dealerId, httpContent);
+
+            response.StatusCode.Should().Be(System.Net.HttpStatusCode.NotFound);
+        }
 
         private void SeedDealerToDb(Dealer dealer)
         {
