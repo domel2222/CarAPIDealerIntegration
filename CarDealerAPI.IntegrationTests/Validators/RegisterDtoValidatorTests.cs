@@ -3,13 +3,8 @@ using CarDealerAPI.DTOS;
 using CarDealerAPI.Extensions.Validators;
 using CarDealerAPI.Models;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Xunit;
 using FluentValidation.TestHelper;
 
@@ -17,14 +12,14 @@ namespace CarDealerAPI.IntegrationTests.Validators
 {
     public class RegisterDtoValidatorTests
     {
-        private DealerDbContext _dbContext;
+        private readonly DealerDbContext _dbContext;
         public RegisterDtoValidatorTests()
         {
-            var config = new ConfigurationBuilder()
-                .Build();
+            //var config = new ConfigurationBuilder()
+            //    .Build();
             var builder = new DbContextOptionsBuilder<DealerDbContext>();
             builder.UseInMemoryDatabase("TestDbDealer");
-            _dbContext = new DealerDbContext(builder.Options, config);
+            _dbContext = new DealerDbContext(builder.Options);
             Seed();
         }
 

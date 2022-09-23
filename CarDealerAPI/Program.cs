@@ -1,29 +1,29 @@
+using CarDealerAPI;
 using CarDealerAPI.Authentication;
 using CarDealerAPI.Authorization;
 using CarDealerAPI.Contexts;
 using CarDealerAPI.DTOS;
-using CarDealerAPI.Extensions.Validators;
 using CarDealerAPI.Extensions;
+using CarDealerAPI.Extensions.Validators;
 using CarDealerAPI.Middlewere;
 using CarDealerAPI.Models;
 using CarDealerAPI.Services;
-using CarDealerAPI;
 using FluentValidation;
+using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using NLog.Web;
 using System.Reflection;
 using System.Text;
-using FluentValidation.AspNetCore;
-using System.Runtime.CompilerServices;
 
 //[assembly: InternalsVisibleTo("CarDealerAPI.IntegrationTests")]
 
-var builder = WebApplication.CreateBuilder();
+var builder = WebApplication.CreateBuilder(args);
 
-//NLog config 
+//NLog config
 builder.Logging.ClearProviders();
 builder.Logging.SetMinimumLevel(LogLevel.Trace);
 builder.Host.UseNLog();
@@ -61,7 +61,7 @@ builder.Services.AddAuthorization(policy =>
 });
 
 builder.Services.AddControllers().AddFluentValidation();
-builder.Services.AddDbContext<DealerDbContext>();
+//builder.Services.AddDbContext<DealerDbContext>();
 builder.Services.AddScoped<DealerSeeder>();
 builder.Services.AddScoped<IAuthorizationHandler, CheckAgeHandler>();
 builder.Services.AddScoped<IAuthorizationHandler, ResouceOperationRequirementHandler>();
@@ -91,12 +91,16 @@ builder.Services.AddCors(option =>
             .WithOrigins(builder.Configuration["AllowClient"]));
 });
 
+builder.Services.AddDbContext<DealerDbContext>(
+    option =>
+        option.UseSqlServer(builder.Configuration.GetConnectionString("DealersCar"))
+    );
+
 var app = builder.Build();
 //configure
 
 var scope = app.Services.CreateScope();
 var seeder = scope.ServiceProvider.GetRequiredService<DealerSeeder>();
-
 
 app.UseResponseCaching();
 app.UseStaticFiles();
@@ -107,17 +111,7 @@ if (app.Environment.IsDevelopment())
 {
     app.UseDeveloperExceptionPage();
 }
-//app.Use(async (context, next) =>
-//{
-//    // Do work that doesn't write to the Response.
-//    await next.Invoke();
-//    // Do logging or other work that doesn't write to the Response.
-//});
 
-//app.Run(async context =>
-//{
-//    await context.Response.WriteAsync("Hello from 2nd delegate.");
-//});
 app.UseMiddleware<ErrorHandlingMiddleware>();
 app.UseMiddleware<RequestTimeMiddle>();
 app.UseHttpsRedirection();
@@ -131,7 +125,6 @@ app.UseSwaggerUI(c =>
 });
 app.UseRouting();
 
-
 app.UseAuthorization();
 
 app.UseEndpoints(endpoints =>
@@ -141,5 +134,5 @@ app.UseEndpoints(endpoints =>
 
 app.Run();
 
-public partial class Program { }
-
+public partial class Program
+{ }

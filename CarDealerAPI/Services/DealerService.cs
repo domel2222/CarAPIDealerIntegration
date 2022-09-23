@@ -41,6 +41,7 @@ namespace CarDealerAPI.Services
 
         public DealerReadDTO GetDealerById(int id)
         {
+
             var dealer = _dealerDbContext
                 .Dealers
                 .Include(r => r.Address)
@@ -48,6 +49,9 @@ namespace CarDealerAPI.Services
                 .FirstOrDefault(r => r.Id == id);
 
             if (dealer == null) throw new NotFoundException("dealer not found");
+            //if (dealer == null) 
+            //return default;
+            //throw new NotFoundException("dealer not found");
 
             var result = _mapper.Map<DealerReadDTO>(dealer);
 
@@ -125,8 +129,7 @@ namespace CarDealerAPI.Services
                 .Dealers
                 .FirstOrDefault(a => a.Id == id);
 
-            if (dealer == null)
-                throw new NotFoundException("dealer not found");
+            if (dealer == null) throw new NotFoundException("dealer not found");
 
             var authResult = _authorizationService.AuthorizeAsync(_userContextService.User, dealer, new ResouceOperationRequirement(ResouceOperation.Update)).Result;
 

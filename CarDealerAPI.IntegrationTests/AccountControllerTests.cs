@@ -37,10 +37,14 @@ namespace CarDealerAPI.IntegrationTests
 
                                 services.Remove(dbContextOption);
 
+                                var dbContextOption22 = services
+                                        .SingleOrDefault(services => services.ServiceType == typeof(DbContextOptions<DealerDbContext>));
+
                                 services.AddSingleton<IAccountService>(_accountServiceMock.Object);
 
                                 services.AddDbContext<DealerDbContext>(options => options.UseInMemoryDatabase("DealerDb"));
                             });
+                        
                         })
                         .CreateClient();
         }

@@ -39,9 +39,9 @@ namespace CarDealerAPI.Profiles
             CreateMap<CarCreateDTO, Car>();
         }
 
-        private void MapUpdateDtos()
-        {
+        //private void MapUpdateDtos()
+        //{
 
-        }
+        //}
     }
 }

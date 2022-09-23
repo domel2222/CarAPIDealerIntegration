@@ -1,13 +1,10 @@
-﻿using CarDealerAPI.Controllers;
-using FluentAssertions;
+﻿using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Xunit;
 
 namespace CarDealerAPI.IntegrationTests
@@ -19,11 +16,11 @@ namespace CarDealerAPI.IntegrationTests
 
         public ConfigurationDependencyTests(WebApplicationFactory<Program> webApplicationFactory)
         {
-             _controllerTypes = typeof(Program)
-                .Assembly
-                .GetTypes()
-                .Where(c => c.IsSubclassOf(typeof(ControllerBase)))
-                .ToList();
+            _controllerTypes = typeof(Program)
+               .Assembly
+               .GetTypes()
+               .Where(c => c.IsSubclassOf(typeof(ControllerBase)))
+               .ToList();
 
             _webApplicationFactory = webApplicationFactory.WithWebHostBuilder(builder =>
                     {
@@ -33,6 +30,7 @@ namespace CarDealerAPI.IntegrationTests
                         });
                     });
         }
+
         [Fact]
         public void ConfigurationServices_ForControlers_HasAllDependencies()
         {

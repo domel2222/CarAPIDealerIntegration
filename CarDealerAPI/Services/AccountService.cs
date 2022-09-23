@@ -6,13 +6,9 @@ using CarDealerAPI.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
-using System;
-using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
 using System.Security.Claims;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace CarDealerAPI.Services
 {
@@ -29,8 +25,6 @@ namespace CarDealerAPI.Services
             this._authenticationSettings = authenticationSettings;
         }
 
-
-
         public string GenerateToken(UserLoginDTO login)
         {
             var user = _dealerDbContext.Users
@@ -42,6 +36,7 @@ namespace CarDealerAPI.Services
             var result = _passwordHasher.VerifyHashedPassword(user, user.PasswordHash, login.Password);
 
             if (result == PasswordVerificationResult.Failed) throw new BadRequestException("Username or password is wrong");
+
             //refactor outside method
 
             List<Claim> cliams = CreateClaims(user);
@@ -59,27 +54,23 @@ namespace CarDealerAPI.Services
             var tokenHandler = new JwtSecurityTokenHandler();
 
             return tokenHandler.WriteToken(token);
-
         }
 
         public void RegisterUser(UserCreateDTO userDto)
         {
-
-            
             var newUser = new User()
             {
-
                 DateOfBirth = userDto.DateOfBirth,
                 Email = userDto.Email,
                 Nationality = userDto.Nationality,
                 RoleId = userDto.RoleId
-                
             };
             var passwordHashed = _passwordHasher.HashPassword(newUser, userDto.Password);
-            newUser.PasswordHash = passwordHashed; 
+            newUser.PasswordHash = passwordHashed;
             _dealerDbContext.Add(newUser);
             _dealerDbContext.SaveChanges();
         }
+
         private static List<Claim> CreateClaims(User user)
         {
             var cliams = new List<Claim>
@@ -88,8 +79,6 @@ namespace CarDealerAPI.Services
                 new Claim(ClaimTypes.Name, $"{user.FirstName} {user.LastName}"),
                 new Claim(ClaimTypes.Role, $"{user.Role.NameRole}"),
                 new Claim("DateBirth", user.DateOfBirth.Value.ToString("yyyy-MM-dd")),
-
-
             };
 
             if (!string.IsNullOrEmpty(user.Nationality))

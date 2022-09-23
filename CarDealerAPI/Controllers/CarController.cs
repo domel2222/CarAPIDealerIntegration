@@ -1,14 +1,7 @@
-﻿using CarDealerAPI.Contexts;
-using CarDealerAPI.DTOS;
+﻿using CarDealerAPI.DTOS;
 using CarDealerAPI.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CarDealerAPI.Controllers
 {
@@ -19,12 +12,10 @@ namespace CarDealerAPI.Controllers
     public class CarController : ControllerBase
     {
         private readonly ICarService _carService;
-        private readonly DealerDbContext _dealerDbContext;
 
-        public CarController(ICarService carService, DealerDbContext dealerDbContext)
+        public CarController(ICarService carService)
         {
             this._carService = carService;
-            this._dealerDbContext = dealerDbContext;
         }
 
         [HttpPost]
@@ -44,8 +35,9 @@ namespace CarDealerAPI.Controllers
         }
 
         [HttpGet]
-        [Authorize(Policy = "DealerMinimum")]
-        public ActionResult<List<CarReadDTO>>  GetAllCars(int dealerId)
+        //[Authorize(Policy = "DealerMinimum")]
+        [Authorize(Policy = "ColorEyes")] // how to test this policy??
+        public ActionResult<List<CarReadDTO>> GetAllCars(int dealerId)
         {
             var cars = _carService.GetAllCarForDealer(dealerId);
 
@@ -53,12 +45,13 @@ namespace CarDealerAPI.Controllers
         }
 
         [HttpDelete]
-        public  ActionResult DeleteAllCars(int dealerId)
+        public ActionResult DeleteAllCars(int dealerId)
         {
             _carService.DeleteAll(dealerId);
 
             return NoContent();
         }
+
         //delet one car
     }
 }

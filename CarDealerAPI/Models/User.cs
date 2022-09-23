@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace CarDealerAPI.Models
+﻿namespace CarDealerAPI.Models
 {
     public class User
     {
@@ -18,6 +12,5 @@ namespace CarDealerAPI.Models
         public string PasswordHash { get; set; }
         public int RoleId { get; set; }// foreign key
         public virtual Role Role { get; set; }
-
     }
 }
